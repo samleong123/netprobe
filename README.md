@@ -7,7 +7,7 @@ NetProbe is a lightweight, open-source utility designed to benchmark your Intern
 Designed for Android 8.0+ using Material 3, NetProbe is completely self-contained, requiring zero account setups, subscriptions, or complex installations.
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/872b0b55-9c62-457e-9965-8900700bcc43" alt="image 1" height="300" />
+  <img src="https://github.com/user-attachments/assets/872b0b55-9c62-457e-9965-8900700bcc43" alt="image 1" height="500" />
 </div>
 
 ---
