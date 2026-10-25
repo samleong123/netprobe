@@ -1,0 +1,4 @@
+<resources>
+    <!-- App identity, matching the Flutter theme seed. -->
+    <color name="launcher_background">#006A60</color>
+</resources>
