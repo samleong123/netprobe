@@ -7,7 +7,7 @@ NetProbe is a lightweight, open-source utility designed to benchmark your Intern
 Designed for Android 8.0+ using Material 3, NetProbe is completely self-contained, requiring zero account setups, subscriptions, or complex installations.
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/872b0b55-9c62-457e-9965-8900700bcc43" alt="image 1" height="500" />
+ <img height="500" alt="image" src="https://github.com/user-attachments/assets/ad1f0fa0-33ab-4029-a8e1-34d4e6c2bee5" />
 </div>
 
 ---
@@ -99,14 +99,14 @@ NetProbe
 
 <table>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/872b0b55-9c62-457e-9965-8900700bcc43" alt="image 1" width="443" height="854" /></td>
-    <td><img src="https://github.com/user-attachments/assets/dddcc37e-9fd6-4d10-85ab-78354a902b1c" alt="image 2" width="443" height="854" /></td>
-    <td><img src="https://github.com/user-attachments/assets/c0f2daee-874f-402f-a098-ea8335b78f2a" alt="image 3" width="443" height="854" /></td>
+    <td><img width="443" height="854" alt="image" src="https://github.com/user-attachments/assets/68db930a-33f1-4b46-aeb8-09a025213f76" /></td>
+    <td><img width="443" height="854" alt="image" src="https://github.com/user-attachments/assets/badfebcd-b8dc-4f28-a371-43ed9f83f5ea" /></td>
+    <td><img width="443" height="854" alt="image" src="https://github.com/user-attachments/assets/10d30a3c-5c7a-4783-a983-ca5cedebce7d" /></td>
   </tr>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/27a4ea7c-a8e4-414a-8c8a-4fcca99f0a0b" alt="image 4" width="443" height="854" /></td>
-    <td><img src="https://github.com/user-attachments/assets/f78f743c-85fb-4179-8fcf-3ed477d9d28c" alt="image 5" width="443" height="854" /></td>
-    <td><img src="https://github.com/user-attachments/assets/4055392b-fa2b-4921-8482-be4a2dbd053e" alt="image 6" width="443" height="854" /></td>
+    <td><img width="443" height="854" alt="image" src="https://github.com/user-attachments/assets/146b9786-c7a9-4a94-95a8-888edc2c3730" /></td>
+    <td><img width="443" height="854" alt="image" src="https://github.com/user-attachments/assets/21817163-887d-4302-beef-fee8e2de9f94" /></td>
+    <td><img width="443" height="854" alt="image" src="https://github.com/user-attachments/assets/19d5d7d3-3434-4438-b855-8a84065b43f4" /></td>
   </tr>
 </table>
 
