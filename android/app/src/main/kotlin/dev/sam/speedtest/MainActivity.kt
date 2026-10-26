@@ -134,7 +134,7 @@ class MainActivity : FlutterActivity() {
                         fun str(k: String) = if (j.isNull(k)) null else j.optString(k).takeIf { it.isNotBlank() }
                         fun num(k: String) = if (j.isNull(k)) null else j.getLong(k)
                         TransferConfig(j.getString("id"), j.getString("mode"), j.getInt("threads"), j.getString("serverName"),
-                            str("downloadUrl"), str("uploadUrl"), str("latencyUrl"), num("durationSeconds"), num("maxBytes"), j.optString("unit", "Mbps"))
+                            str("downloadUrl"), str("uploadUrl"), str("latencyUrl"), num("durationSeconds"), num("maxBytes"), j.optString("unit", "Mbps"), j.optBoolean("customServer", false))
                         startForegroundService(Intent(this, TransferService::class.java).putExtra("config", json))
                         result.success(null)
                     } catch (e: Exception) {

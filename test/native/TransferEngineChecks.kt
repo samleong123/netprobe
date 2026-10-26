@@ -62,7 +62,7 @@ private class UploadReplyConnection(
     }
 }
 
-fun main() {
+fun main(args: Array<String>) {
     var passed = 0
     fun test(name: String, run: () -> Unit) { run(); passed++; println("PASS $name") }
     fun config(mode: String, threads: Int = 8, seconds: Long? = 1, cap: Long? = null) = TransferConfig(
@@ -271,7 +271,7 @@ fun main() {
         check(engine.snapshot()["totalBytes"] == 98765L) { engine.snapshot() }
     }
     test("invalid or missing size acknowledgement cannot fabricate upload results") {
-        for (reply in listOf("ok", "size=0", "size=-1", "size=999999", "size=999999999999999999999999999", "size=10&size=20", "x".repeat(4097))) {
+        for (reply in listOf("", "ok", "size=0", "size=-1", "size=999999", "size=999999999999999999999999999", "size=10&size=20", "x".repeat(4097))) {
             val engine = TransferEngine(config("upload", 1, null, 1234)) { url ->
                 UploadReplyConnection(url, reply = { ByteArrayInputStream(reply.toByteArray()) })
             }
@@ -279,6 +279,29 @@ fun main() {
             check(engine.snapshot()["status"] == "error") { engine.snapshot() }
             check(engine.snapshot()["totalBytes"] == 0L) { engine.snapshot() }
         }
+    }
+    test("custom HTTP 200 uploads count the full payload without reading any response body") {
+        val sent = AtomicLong()
+        val engine = TransferEngine(config("upload", 64, null, 1_234_567).copy(customServer = true)) { url ->
+            UploadReplyConnection(url,
+                reply = { error("Custom upload success must not depend on its response body") },
+                finished = { sent.addAndGet(it.size.toLong()) })
+        }
+        engine.run()
+        val result = engine.snapshot()
+        check(result["status"] == "complete") { result }
+        check(result["totalBytes"] == 1_234_567L && sent.get() == 1_234_567L) { result }
+        check(result["message"] == "Data limit reached") { result }
+        check((result["uploadMbps"] as Double) > 0) { result }
+    }
+    test("custom upload rejection cannot count the sent payload as successful") {
+        val engine = TransferEngine(config("upload", 1, null, 1234).copy(customServer = true)) { url ->
+            UploadReplyConnection(url, code = { 403 })
+        }
+        engine.run()
+        val result = engine.snapshot()
+        check(result["status"] == "error" && result["totalBytes"] == 0L) { result }
+        check((result["message"] as String).contains("HTTP 403")) { result }
     }
     test("redirect loops and missing or invalid Locations fail before sending payload") {
         for (location in listOf(null, "/upload", "file:///tmp/upload", "https://user:pass@example.test/upload")) {
@@ -407,6 +430,35 @@ fun main() {
         check(runCatching { config("download", 0) }.isFailure)
         check(!TransferConfig.validUrl("file:///tmp/data"))
         check(!TransferConfig.validUrl("http://user:pass@example.test/upload"))
+    }
+    if (args.isNotEmpty()) {
+        val baseUrl = args.single().trimEnd('/')
+        fun httpUpload(path: String, custom: Boolean): Map<String, Any?> {
+            val engine = TransferEngine(config("upload", 4, null, 123456).copy(
+                uploadUrl = "$baseUrl/$path", customServer = custom))
+            engine.run()
+            return engine.snapshot()
+        }
+        for (path in listOf("empty", "json", "invalid-size", "redirect")) {
+            test("real HTTP custom $path upload accepts 200 without a size acknowledgement") {
+                val result = httpUpload(path, true)
+                check(result["status"] == "complete" && result["totalBytes"] == 123456L) { result }
+                check((result["uploadMbps"] as Double) > 0) { result }
+            }
+        }
+        test("real HTTP Speedtest upload still requires a valid received size") {
+            val result = httpUpload("size", false)
+            check(result["status"] == "complete" && result["totalBytes"] == 123456L) { result }
+            for (path in listOf("empty", "json", "invalid-size")) {
+                val rejected = httpUpload(path, false)
+                check(rejected["status"] == "error" && rejected["totalBytes"] == 0L) { rejected }
+            }
+        }
+        test("real HTTP custom upload still rejects HTTP errors") {
+            val result = httpUpload("rejected", true)
+            check(result["status"] == "error" && result["totalBytes"] == 0L) { result }
+            check((result["message"] as String).contains("HTTP 403")) { result }
+        }
     }
     println("$passed native engine checks passed")
 }

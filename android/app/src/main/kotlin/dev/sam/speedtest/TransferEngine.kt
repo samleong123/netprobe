@@ -49,6 +49,7 @@ data class TransferConfig(
     val durationSeconds: Long?,
     val maxBytes: Long?,
     val unit: String,
+    val customServer: Boolean = false,
 ) {
     init {
         require(mode in listOf("normal", "download", "upload")) { "Choose a transfer mode." }
@@ -423,7 +424,9 @@ class TransferEngine(
                         continue
                     }
                     checkResponse(c, code)
-                    val size = readUploadSize(c, reserved)
+                    // Custom endpoints confirm the POST through HTTP success;
+                    // only Speedtest servers provide a received-size contract.
+                    val size = if (config.customServer) reserved else readUploadSize(c, reserved)
                     if (finishingUpload()) acknowledged = size
                     return acknowledged
                 } finally { release(c) }

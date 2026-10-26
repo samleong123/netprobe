@@ -226,7 +226,7 @@ class _CustomServerSheetState extends State<_CustomServerSheet> {
     child: Padding(
       padding: EdgeInsets.fromLTRB(
         24,
-        0,
+        24,
         24,
         MediaQuery.viewInsetsOf(context).bottom + 24,
       ),

@@ -12,6 +12,7 @@ class FakeBridge extends AndroidBridge {
   Map<String, dynamic> stored = {'servers': '[]', 'history': '[]'};
   int startupRequests = 0;
   bool startupGranted = true;
+  Map<String, dynamic>? startedConfig;
   Discovery nearby = const Discovery('203.0.113.1', 'Example ISP', '', '', []);
 
   @override
@@ -35,6 +36,14 @@ class FakeBridge extends AndroidBridge {
   }
 
   @override
+  Future<bool> requestNotifications() async => true;
+
+  @override
+  Future<void> start(Map<String, dynamic> config) async {
+    startedConfig = config;
+  }
+
+  @override
   Future<Discovery> discover(String search) {
     if (search.isEmpty) {
       return Future.value(nearby);
@@ -46,6 +55,34 @@ class FakeBridge extends AndroidBridge {
 }
 
 void main() {
+  for (final custom in [false, true]) {
+    for (final mode in [TestMode.normal, TestMode.upload]) {
+      testWidgets('passes custom=$custom to native engine in ${mode.name}', (
+        tester,
+      ) async {
+        final bridge = FakeBridge();
+        final controller = AppController(bridge: bridge)
+          ..initialized = true
+          ..network = {'connected': true, 'transport': 'Wi-Fi'}
+          ..settings = AppSettings(mode: mode)
+          ..selectedServer = TestServer(
+            id: custom ? 'custom:1' : 'ookla:1',
+            name: '',
+            sponsor: 'Upload test',
+            country: '',
+            downloadUrl: 'http://example.test/download',
+            uploadUrl: 'http://example.test/upload',
+            custom: custom,
+          );
+        addTearDown(controller.dispose);
+        addTearDown(bridge.eventController.close);
+        await controller.start();
+        expect(bridge.startedConfig?['customServer'], custom);
+        expect(bridge.startedConfig?['mode'], mode.name);
+      });
+    }
+  }
+
   testWidgets(
     'legacy endpoints are repaired and saved even before discovery returns that server',
     (tester) async {

@@ -307,6 +307,7 @@ class AppController extends ChangeNotifier {
         'downloadUrl': server.downloadUrl,
         'uploadUrl': server.uploadUrl,
         'latencyUrl': server.latencyUrl,
+        'customServer': server.custom,
         'durationSeconds': settings.mode == TestMode.normal
             ? settings.normalSeconds
             : settings.sustainedSeconds,

@@ -7,4 +7,4 @@ mkdir -p .verification
 JAVA_HOME="$task_java" "$task_kotlin/bin/kotlinc" \
   android/app/src/main/kotlin/dev/sam/speedtest/TransferEngine.kt \
   test/native/TransferEngineChecks.kt -include-runtime -d .verification/engine-checks.jar
-"$task_java/bin/java" -jar .verification/engine-checks.jar
+"$task_java/bin/java" -jar .verification/engine-checks.jar "$@"

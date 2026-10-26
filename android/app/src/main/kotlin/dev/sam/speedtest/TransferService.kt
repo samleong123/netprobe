@@ -91,7 +91,7 @@ class TransferService : Service() {
             fun number(key: String) = if (j.isNull(key)) null else j.getLong(key)
             val config = TransferConfig(j.getString("id"), j.getString("mode"), j.getInt("threads"),
                 j.getString("serverName"), string("downloadUrl"), string("uploadUrl"), string("latencyUrl"),
-                number("durationSeconds"), number("maxBytes"), j.optString("unit", "Mbps"))
+                number("durationSeconds"), number("maxBytes"), j.optString("unit", "Mbps"), j.optBoolean("customServer", false))
             unit = config.unit
             val connectivity = getSystemService(ConnectivityManager::class.java)
             val network = connectivity.activeNetwork ?: error("No connected network")

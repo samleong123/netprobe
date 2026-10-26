@@ -1,0 +1,6 @@
+simulation: upload
+routing: path
+mocks:
+  - name: upload
+    routeKey: upload
+    path: postman/mocks/upload
